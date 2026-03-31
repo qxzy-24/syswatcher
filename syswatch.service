@@ -1,0 +1,21 @@
+[Unit]
+Description=Syswatch 24/7 System Monitoring Daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=PYTHONUNBUFFERED=1
+Environment=SYSWATCH_HOME=/opt/syswatch
+Environment=SYSWATCH_CONFIG=/opt/syswatch/config.yaml
+EnvironmentFile=-/etc/default/syswatch
+WorkingDirectory=/
+ExecStart=/usr/bin/python3 ${SYSWATCH_HOME}/main.py --config ${SYSWATCH_CONFIG}
+Restart=always
+RestartSec=10
+OOMScoreAdjust=-1000
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

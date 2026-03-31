@@ -1,0 +1,40 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Packaging artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Test and type-check artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Runtime state and logs
+logs/
+state/
+*.log
+*.tmp
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class

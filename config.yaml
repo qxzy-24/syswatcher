@@ -1,0 +1,56 @@
+# Syswatch configuration file.
+# Replace placeholder values before enabling the systemd service in production.
+
+# File-system paths used by the daemon.
+paths:
+  # Log file destination. Relative paths are resolved from this config file's directory.
+  log_file: "./logs/syswatch.log"
+
+  # Persistent daemon state used to preserve cooldowns across restarts/reboots.
+  state_file: "./state/state.json"
+
+# Monitoring interval in seconds.
+# Lower values provide faster detection at the cost of slightly higher CPU usage.
+check_interval_seconds: 15
+
+# Monitoring-specific options.
+monitor:
+  # Disk target used for disk usage checks.
+  # Use "auto" to detect the primary partition automatically.
+  # Example Linux override: "/data"
+  # Example Windows override: "C:\\"
+  disk_mountpoint: "auto"
+
+  # Number of top resource-heavy processes to include in CPU/RAM alerts.
+  top_process_count: 3
+
+# Telegram integration settings.
+telegram:
+  # Telegram bot token generated via @BotFather.
+  bot_token: "123456789:REPLACE_WITH_TELEGRAM_BOT_TOKEN"
+
+  # Telegram chat ID where alerts should be delivered.
+  # Use a numeric ID for users/groups/channels, quoted to preserve formatting.
+  chat_id: "REPLACE_WITH_CHAT_ID"
+
+  # Per-request network timeout for Telegram API calls.
+  request_timeout_seconds: 10
+
+  # Retry policy for transient Telegram failures.
+  retry_max_attempts: 4
+  retry_initial_delay_seconds: 2.0
+  retry_backoff_factor: 2.0
+
+# Per-metric alert rules. Each metric has its own threshold and cooldown.
+alerts:
+  cpu:
+    threshold_percent: 90.0
+    cooldown_minutes: 5
+
+  ram:
+    threshold_percent: 90.0
+    cooldown_minutes: 5
+
+  disk:
+    threshold_percent: 90.0
+    cooldown_minutes: 30
