@@ -201,8 +201,11 @@ def _load_metric_policy(
 
 def load_config(config_path: Path) -> AppConfig:
     """Load and validate daemon configuration from YAML."""
-    with config_path.open("r", encoding="utf-8") as config_file:
-        raw = yaml.safe_load(config_file) or {}
+    try:
+        with config_path.open("r", encoding="utf-8") as config_file:
+            raw = yaml.safe_load(config_file) or {}
+    except FileNotFoundError as exc:
+        raise ValueError(f"Configuration file not found: {config_path}") from exc
 
     if not isinstance(raw, dict):
         raise ValueError("Top-level YAML structure must be a mapping/object.")

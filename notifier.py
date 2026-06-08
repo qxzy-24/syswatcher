@@ -38,11 +38,6 @@ class TelegramNotifier:
         self.retry_backoff_factor = max(1.0, float(retry_backoff_factor))
         self.endpoint = f"{self.BASE_URL}/bot{self.bot_token}/sendMessage"
 
-    @staticmethod
-    def _is_retryable_status(status_code: int) -> bool:
-        """Return True for HTTP statuses that are usually transient."""
-        return status_code == 429 or status_code >= 500
-
     def send_message(self, message: str) -> bool:
         """Send a raw text message to Telegram.
 
@@ -52,7 +47,7 @@ class TelegramNotifier:
         payload = {
             "chat_id": self.chat_id,
             "text": message,
-            "disable_web_page_preview": True,
+            "link_preview_options": {"is_disabled": True},
         }
 
         retry_delay = self.retry_initial_delay_seconds
@@ -63,7 +58,18 @@ class TelegramNotifier:
             try:
                 response = requests.post(self.endpoint, json=payload, timeout=self.timeout_seconds)
 
-                if self._is_retryable_status(response.status_code):
+                if response.status_code == 429:
+                    try:
+                        result = response.json()
+                        retry_after = result.get("parameters", {}).get("retry_after")
+                        if retry_after:
+                            retry_delay = float(retry_after)
+                    except ValueError:
+                        pass
+                    retry_reason = f"rate-limited by Telegram: {response.text[:200]}"
+                    raise RuntimeError(retry_reason)
+
+                if response.status_code >= 500:
                     retry_reason = f"transient status {response.status_code}: {response.text[:200]}"
                     raise RuntimeError(retry_reason)
 

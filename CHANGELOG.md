@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-06-08
+
+### Fixed
+- Fixed Telegram rate limiting to respect the exact `retry_after` duration provided by the API instead of using exponential backoff.
+- Gracefully handle missing `config.yaml` with a clear, readable error message.
+- Optimized logger initialization to prevent redundant reconfiguration.
+
+### Changed
+- Updated Telegram API requests to use the modern `link_preview_options` instead of the deprecated `disable_web_page_preview`.
+
 ## [1.0.0] - 2026-03-31
 
 ### Added

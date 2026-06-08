@@ -1,19 +1,25 @@
-# Syswatcher
+# 🛡️ Syswatcher
+
+![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status: Active](https://img.shields.io/badge/Status-Active-success.svg)
 
 Syswatcher is a lightweight, resilient Python daemon for 24/7 host monitoring with Telegram alerting.
 It continuously tracks CPU, RAM, and disk usage, enriches alerts with top resource-heavy processes,
 and is built to keep running safely under real production conditions.
 
-## Why Syswatcher
+---
 
-- Per-metric thresholds and cooldowns for precise alert tuning
-- Recovery notifications when systems return to normal
-- Exponential backoff retries for transient Telegram failures
-- Persistent on-disk alert state so cooldowns survive process restarts
-- Configurable log and state paths for Linux and Windows portability
-- systemd unit included for Ubuntu server deployments
+## 🌟 Features
 
-## Architecture
+- **Precise Alert Tuning:** Per-metric thresholds and cooldowns.
+- **Recovery Notifications:** Get notified when systems return to normal.
+- **Resilient Delivery:** Exponential backoff retries for transient Telegram failures and precise handling of rate limits.
+- **Persistent State:** On-disk alert state ensures cooldowns survive process restarts.
+- **Cross-Platform:** Configurable log and state paths for Linux and Windows portability.
+- **Production Ready:** systemd unit included for Ubuntu server deployments.
+
+## 🏗️ Architecture
 
 - `main.py`: daemon loop, config loading, alert policy evaluation, persistent state
 - `monitor.py`: psutil-based metric collection and top process sampling
@@ -22,7 +28,7 @@ and is built to keep running safely under real production conditions.
 - `config.yaml`: runtime configuration for thresholds, cooldowns, paths, and retry behavior
 - `syswatch.service`: systemd unit for long-running service management
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 syswatcher/
@@ -36,28 +42,30 @@ syswatcher/
 └── README.md
 ```
 
-## Requirements
+## ⚙️ Requirements
 
 - Python 3.8 or later
 - Linux (recommended for service mode) or Windows (manual/background mode)
 
 Python dependencies are listed in `requirements.txt`:
+- `psutil`
+- `PyYAML`
+- `requests`
 
-- psutil
-- PyYAML
-- requests
+---
 
-## Quick Start
+## 🚀 Quick Start
 
-1. Clone the repository.
+1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/USERNAME/syswatcher.git
+git clone https://github.com/qxzy-24/syswatcher.git
 cd syswatcher
 ```
 
-2. Create and activate a virtual environment.
+2. **Create and activate a virtual environment:**
 
+*Linux/macOS:*
 ```bash
 python -m venv .venv
 source .venv/bin/activate

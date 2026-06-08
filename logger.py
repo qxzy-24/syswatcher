@@ -103,7 +103,9 @@ def setup_logging(
 
 def get_logger(module_name: str | None = None) -> logging.Logger:
     """Return a child logger scoped to the given module name."""
-    base_logger = setup_logging()
+    base_logger = logging.getLogger("syswatch")
+    if not base_logger.handlers:
+        base_logger = setup_logging()
 
     if module_name:
         return base_logger.getChild(module_name)
