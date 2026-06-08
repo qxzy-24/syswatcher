@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2026-06-08
+
+### Fixed
+- Fixed premature logger initialization in `notifier.py` that could create handlers before the daemon configured logging.
+- Fixed per-process CPU measurements returning near-zero values by reordering counter priming before the 1-second system CPU sample.
+- Corrected Python version requirement from 3.8+ to 3.10+ (codebase uses PEP 604 union syntax).
+
+### Added
+- Graceful shutdown handling via SIGTERM/SIGINT with final state persistence.
+- Segmented sleep in the daemon loop so signals are handled within 1 second.
+- Python 3.13 added to the CI test matrix.
+- Minimum version constraints in `requirements.txt`.
+
+### Changed
+- systemd unit now sets `WorkingDirectory` to the application directory.
+- systemd unit documents how to run as a non-root dedicated service user.
+- systemd unit adds `KillMode=mixed` and `TimeoutStopSec=30` for graceful shutdown.
+
 ## [1.0.1] - 2026-06-08
 
 ### Fixed

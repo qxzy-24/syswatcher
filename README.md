@@ -1,6 +1,6 @@
 # 🛡️ Syswatcher
 
-![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Status: Active](https://img.shields.io/badge/Status-Active-success.svg)
 
@@ -44,7 +44,7 @@ syswatcher/
 
 ## ⚙️ Requirements
 
-- Python 3.8 or later
+- Python 3.10 or later
 - Linux (recommended for service mode) or Windows (manual/background mode)
 
 Python dependencies are listed in `requirements.txt`:

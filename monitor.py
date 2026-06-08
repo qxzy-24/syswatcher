@@ -90,6 +90,9 @@ def get_system_metrics(disk_mountpoint: str | None = None, top_process_count: in
         Dict[str, Any]: A normalized snapshot suitable for threshold checks and
         logging. Percent values are rounded for readability.
     """
+    # Prime per-process CPU counters *before* the blocking system CPU call.
+    # The 1-second `interval` in `cpu_percent()` then doubles as the time
+    # window for meaningful per-process CPU deltas.
     _prime_process_cpu_counters()
 
     # interval=1.0 produces a more realistic CPU percentage than an instant call.

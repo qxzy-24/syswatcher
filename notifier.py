@@ -6,6 +6,7 @@ transient failures never crash the monitoring daemon.
 
 from __future__ import annotations
 
+import logging
 import time
 from typing import Any, Dict, List
 
@@ -13,7 +14,15 @@ import requests
 
 from logger import get_logger
 
-LOGGER = get_logger(__name__)
+_LOGGER: "logging.Logger | None" = None
+
+
+def _get_module_logger() -> "logging.Logger":
+    """Return the module logger, creating it lazily to avoid premature setup."""
+    global _LOGGER  # noqa: PLW0603
+    if _LOGGER is None:
+        _LOGGER = get_logger(__name__)
+    return _LOGGER
 
 
 class TelegramNotifier:
@@ -74,7 +83,7 @@ class TelegramNotifier:
                     raise RuntimeError(retry_reason)
 
                 if 400 <= response.status_code < 500:
-                    LOGGER.error(
+                    _get_module_logger().error(
                         "Telegram API returned permanent client error %s: %s",
                         response.status_code,
                         response.text[:200],
@@ -95,7 +104,7 @@ class TelegramNotifier:
                     retry_reason = f"rate-limited by Telegram: {result}"
                     raise RuntimeError(retry_reason)
 
-                LOGGER.error("Telegram API reported a non-retryable error: %s", result)
+                _get_module_logger().error("Telegram API reported a non-retryable error: %s", result)
                 return False
             except requests.exceptions.Timeout as exc:
                 retry_reason = f"request timeout after {self.timeout_seconds}s: {exc}"
@@ -107,14 +116,14 @@ class TelegramNotifier:
                 retry_reason = str(exc)
 
             if attempt >= self.retry_max_attempts:
-                LOGGER.error(
+                _get_module_logger().error(
                     "Telegram message failed after %s attempts: %s",
                     self.retry_max_attempts,
                     retry_reason,
                 )
                 return False
 
-            LOGGER.warning(
+            _get_module_logger().warning(
                 "Telegram attempt %s/%s failed (%s). Retrying in %.2f seconds.",
                 attempt,
                 self.retry_max_attempts,

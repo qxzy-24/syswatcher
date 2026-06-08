@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import signal
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -526,7 +527,19 @@ def run_daemon(config_path: Path) -> None:
         config.alerts.disk.cooldown_minutes,
     )
 
-    while True:
+    # Graceful shutdown on SIGTERM / SIGINT.
+    shutdown_requested = False
+
+    def _handle_shutdown(signum: int, _frame: Any) -> None:
+        nonlocal shutdown_requested
+        sig_name = signal.Signals(signum).name
+        logger.info("Received %s — initiating graceful shutdown.", sig_name)
+        shutdown_requested = True
+
+    signal.signal(signal.SIGTERM, _handle_shutdown)
+    signal.signal(signal.SIGINT, _handle_shutdown)
+
+    while not shutdown_requested:
         cycle_start = time.monotonic()
 
         try:
@@ -551,7 +564,14 @@ def run_daemon(config_path: Path) -> None:
         finally:
             elapsed = time.monotonic() - cycle_start
             sleep_seconds = max(config.check_interval_seconds - elapsed, 0.0)
-            time.sleep(sleep_seconds)
+            # Break sleep into short segments so signals are handled promptly.
+            sleep_end = time.monotonic() + sleep_seconds
+            while time.monotonic() < sleep_end and not shutdown_requested:
+                time.sleep(min(sleep_end - time.monotonic(), 1.0))
+
+    # Persist final state before exit.
+    save_runtime_state(config.paths.state_file, state)
+    logger.info("Syswatch stopped gracefully.")
 
 
 def parse_args() -> argparse.Namespace:

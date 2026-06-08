@@ -9,11 +9,19 @@ Environment=PYTHONUNBUFFERED=1
 Environment=SYSWATCH_HOME=/opt/syswatch
 Environment=SYSWATCH_CONFIG=/opt/syswatch/config.yaml
 EnvironmentFile=-/etc/default/syswatch
-WorkingDirectory=/
+WorkingDirectory=${SYSWATCH_HOME}
 ExecStart=/usr/bin/python3 ${SYSWATCH_HOME}/main.py --config ${SYSWATCH_CONFIG}
 Restart=always
 RestartSec=10
+KillMode=mixed
+TimeoutStopSec=30
 OOMScoreAdjust=-1000
+
+# For production, create a dedicated user:
+#   sudo useradd --system --no-create-home --shell /usr/sbin/nologin syswatch
+# Then uncomment the lines below and remove the User=root/Group=root lines.
+# User=syswatch
+# Group=syswatch
 User=root
 Group=root
 
