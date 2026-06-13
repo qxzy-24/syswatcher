@@ -10,7 +10,7 @@ Environment=SYSWATCH_HOME=/opt/syswatch
 Environment=SYSWATCH_CONFIG=/opt/syswatch/config.yaml
 EnvironmentFile=-/etc/default/syswatch
 WorkingDirectory=${SYSWATCH_HOME}
-ExecStart=/usr/bin/python3 ${SYSWATCH_HOME}/main.py --config ${SYSWATCH_CONFIG}
+ExecStart=/usr/bin/python3 -m syswatcher --config ${SYSWATCH_CONFIG}
 Restart=always
 RestartSec=10
 KillMode=mixed

@@ -26,14 +26,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -e ".[dev]"
 
       - name: Compile sources
         run: |
-          python -m py_compile main.py logger.py monitor.py notifier.py
-          python -m compileall .
+          python -m compileall src/
+
+      - name: Run unit tests
+        run: |
+          pytest -v
 
       - name: Import smoke test
         run: |
-          python -c "import yaml, psutil, requests"
-          python -c "from monitor import get_system_metrics; print('metrics_ok', isinstance(get_system_metrics(), dict))"
+          python -c "import yaml, psutil, requests, dotenv"
+          python -c "from syswatcher.monitor import get_system_metrics; print('metrics_ok', isinstance(get_system_metrics(), dict))"

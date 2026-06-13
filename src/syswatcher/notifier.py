@@ -12,7 +12,7 @@ from typing import Any, Dict, List
 
 import requests
 
-from logger import get_logger
+from syswatcher.logging import get_logger
 
 _LOGGER: "logging.Logger | None" = None
 

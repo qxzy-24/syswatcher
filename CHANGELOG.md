@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-06-13
+
+### Restructured
+- Restructured flat project structure into a proper Python package (`src/syswatcher/` layout).
+- Refactored `main.py` into separate decoupled components (`models.py`, `config.py`, `logging.py`, `alerting.py`, `daemon.py`, `state.py`).
+- Kept root-level `main.py` as a backward-compatible shim.
+
+### Added
+- Standard packaging configuration via `pyproject.toml` supporting build, metadata, console script (`syswatcher`), and dev dependencies.
+- Local `.env` secrets file loading support using `python-dotenv`.
+- Robust unit and integration test suite under `tests/` utilizing `pytest`.
+- Automated test runs in GitHub Actions CI workflow.
+
 ## [1.0.2] - 2026-06-08
 
 ### Fixed
